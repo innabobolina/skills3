@@ -2,7 +2,6 @@ from flask import Flask, redirect, request, render_template, session
 from flask_debugtoolbar import DebugToolbarExtension
 from jinja2 import StrictUndefined
 
-
 app = Flask(__name__)
 app.jinja_env.undefined = StrictUndefined
 app.jinja_env.auto_reload = True
@@ -36,20 +35,18 @@ MOST_LOVED_MELONS = {
     },
 }
 
-for melon in MOST_LOVED_MELONS:
-    img = MOST_LOVED_MELONS[melon]['img']
-    name = MOST_LOVED_MELONS[melon]['name']
-    loves = MOST_LOVED_MELONS[melon]['num_loves']
-
-
 # YOUR ROUTES GO HERE
 # ------------------------------
 # http://0.0.0.0:5000
 # ------------------------------
 @app.route("/")
 def index():
-    """Return homepage."""
-    return render_template("homepage.html")
+    """Return homepage if a user hasn't entered their name already."""
+
+    if 'name' in session:
+        return redirect("/top-melons/")
+    else:
+        return render_template("homepage.html")
 
 # ------------------------------
 # http://0.0.0.0:5000/top-melons/
@@ -63,6 +60,17 @@ def top_melons():
                                melons=MOST_LOVED_MELONS)
     else:
         return redirect("/")
+    # redirect to homepage if there's no name stored in the session
+
+# ------------------------------
+@app.route("/get-name")
+def get_name():
+    """Add user's name to the session and redirect to top-melons page."""
+
+    session['name'] = request.args.get("user")
+    #get user's name from the form submitted and add to the session
+
+    return redirect("/top-melons/")
 
 # ------------------------------
 # http://0.0.0.0:5000/thank-you/
@@ -71,15 +79,6 @@ def top_melons():
 def thank_you():
 
     return render_template("thank-you.html")
-
-
-# ------------------------------
-@app.route("/get-name")
-def get_name():
-
-    session['name'] = request.args.get("user")
-
-    return redirect("/top-melons/")
 
 # ------------------------------
 if __name__ == "__main__":
