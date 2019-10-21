@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}UberMelon{% endblock %}
+
+{% block content %}
+
+    <h1>UberMelon’s Most Loved Melons</h1>
+    <br>
+    <img src='http://www.rareseeds.com/assets/1/14/DimThumbnail/Jubilee-Watermelon-web.jpg'>
+    
+    <form action="/get-name">
+        <br>What is your name?<br>
+        <input type="text" name="user" required><br>
+        <input type="submit" value="Submit">
+    </form>
+
+{% endblock %}
